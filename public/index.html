@@ -1,0 +1,35 @@
+<!doctype html>
+<html style='background-color: #15ACB7' ng-app="pbxxTv">
+  <head>
+    <meta charset="utf-8">
+    <title>Promoboxx TV</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel='stylesheet' href='./styles/main.css'>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+    <script src="app.js"></script>
+  </head>
+  <body style='background-color: #15ACB7' ng-controller="mainController">
+    <div class="container" >
+
+      <div class='row'>
+        <div class='col-xs-3'>
+          <div class="card" style='margin:10px'>
+            <div class="card-header p-0">
+              <div class="card-brand-name text-center">
+                <h3>Engaged Retailers</h3>
+              </div>
+            </div>
+            <div class="card-block text-center">
+              <h2 class="card-title">
+                {{data.retailerCount | number}}
+              </h2>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </body>
+</html>
