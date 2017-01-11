@@ -27,7 +27,8 @@ var pbxxTv = angular.module('pbxxTv', [
 				}
 
 				function toggleCelebration () {
-					$scope.data.celebration.on = true;
+					//TODO: Re-enable eventually
+					//$scope.data.celebration.on = true;
 
 					$timeout(function () {
 						$scope.data.celebration.on = false;		
