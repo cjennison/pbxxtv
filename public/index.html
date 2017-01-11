@@ -4,32 +4,92 @@
     <meta charset="utf-8">
     <title>Promoboxx TV</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
+    <link rel='stylesheet' href='./styles/vendor.css'>
     <link rel='stylesheet' href='./styles/main.css'>
+    <style>
+      .slider {
+        position: absolute;
+        overflow: hidden;
+      }
+
+      .slider.bottom {
+        top: 100%;
+        left: 0px;
+        transition: top 1s;
+        height: 100%;
+        width: 100%;
+        background: #4caf50;
+        color: white;
+      }
+
+      .slider.bottom.in {
+        top: 00%;
+      }
+
+      .floaty-number {
+        position: relative;
+        top: -60px;
+        left: 75%;
+        font-size: 18px;
+        font-weight: 900;
+        opacity: 0;
+        transition: top 1s ease-out, opacity .3s ease-out;
+      }
+
+      .floaty-number.appear {
+        opacity: .8;
+      }
+
+      .floaty-number.appear.good {
+        top: -80px;
+        color: #4caf50;
+      }
+
+      .floaty-number.appear.bad {
+        top: -40px;
+        color: #F44336;
+      }
+
+    </style>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.12/angular.min.js"></script><!-- load angular -->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
+
     <script src="app.js"></script>
   </head>
-  <body style='background-color: #15ACB7' ng-controller="mainController">
-    <div class="container" >
-
-      <div class='row'>
-        <div class='col-xs-3'>
-          <div class="card" style='margin:10px'>
-            <div class="card-header p-0">
-              <div class="card-brand-name text-center">
-                <h3>Engaged Retailers</h3>
+  <body style='background-color: #15ACB7' ng-app='pbxxTv'>
+    <div ui-view>
+      <div class="container" >
+        <div class='row'>
+          <div class='col-xs-3'>
+            <div class="card" style='margin:10px; height: 175px'>
+              <div class="card-header p-0">
+                <div class="card-brand-name text-center">
+                  <h3>Engaged Retailers</h3>
+                </div>
               </div>
-            </div>
-            <div class="card-block text-center">
-              <h2 class="card-title">
-                {{data.retailerCount | number}}
-              </h2>
-              
+              <div class="card-block text-center">
+                <h2 class="card-title">
+                  {{data.retailers.count | number}}
+                </h2>
+              </div>
+              <div class='floaty-number' ng-class='{appear: data.retailers.change, good: data.retailers.change > 0, bad: data.retailers.change < 0}'>
+                <i class='zmdi zmdi-plus' ng-show='data.retailers.change > 0'></i>
+                {{data.retailers.change | number}}
+              </div>
             </div>
           </div>
         </div>
+        
       </div>
-      
+
+      <div class="bottom slider text-center" ng-class='{"in": data.celebration.on}'>
+        <div style='position:absolute; top:37%; width: 100%'>
+          <h1 style='font-size: 100px'>{{data.celebration.reason}}</h1>
+          <h2>{{data.celebration.subreason}}</h2>
+        </div>
+      </div> 
     </div>
   </body>
 </html>
