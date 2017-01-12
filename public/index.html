@@ -5,91 +5,402 @@
     <title>Promoboxx TV</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
+    <link rel='stylesheet' href='./styles/animate.css'>
     <link rel='stylesheet' href='./styles/vendor.css'>
     <link rel='stylesheet' href='./styles/main.css'>
     <style>
+      body: {
+      font-family: Helvetica; 
+      }
+      .pbxx-branding {
+      position: absolute;
+      bottom: 0px;
+      right: 0;
+      width: 200px;
+      height: 44px;
+      background-image: url(images/promoboxx_logo_2012_primary_highres.png);
+      background-size: 200px;
+      }
+      .quarter {
+      position: absolute;
+      margin-top: -40px;
+      font-weight: 900;
+      font-size: 36px;
+      }
+      .q1 {
+      position: absolute;
+      height: 25%;
+      width: 150px;
+      }
+      .q2 {
+      position: absolute;
+      height: 50%
+      }
+      .q3 {
+      position: absolute;
+      height: 75%
+      }
+      .q4 {
+      position: absolute;
+      height: 100%
+      }
+      .q3-val {
+      position: absolute;
+      top: 73%;
+      width: 150px;
+      }
+      .q2-val {
+      position: absolute;
+      top: 49%;
+      width: 150px;
+      }
+      .q1-val {
+      position: absolute;
+      top: 24%;
+      width: 150px;
+      }
       .slider {
-        position: absolute;
-        overflow: hidden;
+      position: absolute;
+      overflow: hidden;
       }
-
       .slider.bottom {
-        top: 100%;
-        left: 0px;
-        transition: top 1s;
-        height: 100%;
-        width: 100%;
-        background: #4caf50;
-        color: white;
+      top: 100%;
+      left: 0px;
+      transition: top 1s;
+      height: 100%;
+      width: 100%;
+      background: #4caf50;
+      color: white;
       }
-
       .slider.bottom.in {
-        top: 00%;
+      top: 00%;
       }
-
       .floaty-number {
-        position: relative;
-        top: -60px;
-        left: 75%;
-        font-size: 18px;
-        font-weight: 900;
-        opacity: 0;
-        transition: top 1s ease-out, opacity .3s ease-out;
+      position: relative;
+      top: -150px;
+      left: 75%;
+      font-size: 18px;
+      font-weight: 900;
+      opacity: 0;
+      transition: top 1s ease-out, opacity .3s ease-out;
       }
-
       .floaty-number.appear {
-        opacity: .8;
+      opacity: .8;
       }
-
       .floaty-number.appear.good {
-        top: -80px;
-        color: #4caf50;
+      top: -170px;
+      color: #4caf50;
       }
-
       .floaty-number.appear.bad {
-        top: -40px;
-        color: #F44336;
+      top: -130px;
+      color: #F44336;
       }
-
+      .quarter-values {
+      position: absolute;
+      left: 130px;
+      top: 55px;
+      height: 507px;
+      }
+      .logo-img {
+      background-image: url(images/promoboxx_icon_trans_300x300.png);
+      background-repeat: no-repeat;
+      background-position: 50%;
+      background-size: 50%;
+      opacity: 0.5;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      }
+      .progress-bar-vertical {
+      position: absolute;
+      top: 60px;
+      left: 40px;
+      width: 80px;
+      min-height: 500px;
+      margin-right: 20px;
+      float: left;
+      display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+      display: -ms-flexbox;  /* TWEENER - IE 10 */
+      display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+      display: flex;         /* NEW, Spec - Firefox, Chrome, Opera */
+      align-items: flex-end;
+      -webkit-align-items: flex-end; /* Safari 7.0+ */
+      }
+      .progress-bar-vertical .progress-bar {
+      width: 100%;
+      height: 0;
+      -webkit-transition: height 0.6s ease;
+      -o-transition: height 0.6s ease;
+      transition: height 0.6s ease;
+      }
     </style>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js'></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.12/angular.min.js"></script><!-- load angular -->
-        <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
-
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
     <script src="app.js"></script>
   </head>
-  <body style='background-color: #15ACB7' ng-app='pbxxTv'>
+  <body style='background-color: #15ACB7; overflow: hidden' ng-app='pbxxTv'>
+    <div class='logo-img'></div>
     <div ui-view>
-      <div class="container" >
-        <div class='row'>
-          <div class='col-xs-3'>
-            <div class="card" style='margin:10px; height: 175px'>
-              <div class="card-header p-0">
-                <div class="card-brand-name text-center">
-                  <h3>Engaged Retailers</h3>
+    <div class="container" >
+      <div class='row' style='padding-left: 23px; padding-top:5px; padding-right: 23px;'>
+        <div class='col-sx-12'>
+          <div class='card'>
+            <div class='card-body'>
+              <span style='margin:5px'>{{date | date}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-xs-8'>
+          <div class='row'>
+            <div class='col-xs-6'>
+              <div class="card" style='margin:10px; height: 200px'>
+                <div class="card-header p-0">
+                </div>
+                <div class="card-block text-center">
+                  <h4>Engaged Retailers</h4>
+                  <h1 class="card-title">
+                    {{data.retailers.count | number}}
+                  </h1>
+                  <h4>
+                    {{data.retailers.eligibleCount | number}} Eligible
+                  </h4>
+                  <h4 ng-class='{green: data.retailers.change_percent > 0, red: data.retailers.change_percent < 0}' ng-if='data.retailers.past'>
+                    <i class='zmdi zmdi-plus' ng-if='data.retailers.change_percent >= 0'></i>{{data.retailers.change_percent | number:2}}% <span>{{data.retailers.past.time}}</span>
+                  </h4>
+                </div>
+                <div class='floaty-number' ng-class='{appear: data.retailers.change, good: data.retailers.change > 0, bad: data.retailers.change < 0}'>
+                  <i class='zmdi zmdi-plus' ng-show='data.retailers.change > 0'></i>
+                  {{data.retailers.change | number}}
                 </div>
               </div>
-              <div class="card-block text-center">
-                <h2 class="card-title">
-                  {{data.retailers.count | number}}
-                </h2>
+            </div>
+            <!--
+              <div class='col-xs-6'>
+                <div class="card" style='margin:10px; height: 200px'>
+                  <div class="card-header p-0">
+                  </div>
+                  <div class="card-block text-center">
+                    <h4>This Month's Locations Who Engaged</h4>
+              
+                    <h1 class="card-title">
+                      {{data.engaged_locations.present.num_retailers_engaged | number}} 
+                    </h1>
+                    <h4>
+                      {{data.engaged_locations.past.num_retailers_engaged | number}} last month.
+                    </h4>
+              
+                  </div>
+                  <div class='floaty-number' ng-class='{appear: data.engaged_locations.change, good: data.engaged_locations.change > 0, bad: data.engaged_locations.change < 0}'>
+                    <i class='zmdi zmdi-plus' ng-show='data.engaged_locations.change > 0'></i>
+                    {{data.engaged_locations.change | number}}
+                  </div>
+                </div>
               </div>
-              <div class='floaty-number' ng-class='{appear: data.retailers.change, good: data.retailers.change > 0, bad: data.retailers.change < 0}'>
-                <i class='zmdi zmdi-plus' ng-show='data.retailers.change > 0'></i>
-                {{data.retailers.change | number}}
+              
+              -->
+            <div class='col-xs-6'>
+              <div class="card" style='margin:10px; height: 200px'>
+                <div class="card-header p-0">
+                </div>
+                <div class="card-block text-center">
+                  <h4>Brands</h4>
+                  <h1 class="card-title">
+                    {{data.brands.active | number}} Active
+                  </h1>
+                  <h4>
+                    {{data.brands.unlocked | number}} Unlocked
+                  </h4>
+                </div>
+                <div class='floaty-number' ng-class='{appear: data.brands.change, good: data.brands.change > 0, bad: data.brands.change < 0}'>
+                  <i class='zmdi zmdi-plus' ng-show='data.brands.change > 0'></i>
+                  {{data.brands.change | number}}
+                </div>
+              </div>
+            </div>
+            <div class='col-xs-6'>
+              <div class="card" style='margin:10px; height: 200px'>
+                <div class="card-header p-0">
+                </div>
+                <div class="card-block text-center">
+                  <h4>Brand Campaigns Launched</h4>
+                  <h1 class="card-title">
+                    {{data.brand_campaigns.present | number}}
+                  </h1>
+                  <h5> {{data.brand_campaigns.past | number}} Last Month </h5>
+                  <h4 ng-class='{green: data.brand_campaigns.percent_change > 0, red: data.brand_campaigns.percent_change < 0}'>
+                    <i class='zmdi zmdi-plus' ng-if='data.brand_campaigns.percent_change >= 0'></i>{{data.brand_campaigns.percent_change | number:2}}% Change
+                  </h4>
+                </div>
+                <div class='floaty-number' ng-class='{appear: data.brand_campaigns.change, good: data.brand_campaigns.change > 0, bad: data.brand_campaigns.change < 0}'>
+                  <i class='zmdi zmdi-plus' ng-show='data.brand_campaigns.change > 0'></i>
+                  {{data.brand_campaigns.change | number}}
+                </div>
+              </div>
+            </div>
+            <div class='col-xs-6'>
+              <div class="card" style='margin:10px; height: 200px'>
+                <div class="card-header p-0">
+                </div>
+                <div class="card-block text-center">
+                  <h4>Engaged Locations</h4>
+                  <h1 class="card-title" style='font-size: 60px'>
+                    {{data.engaged_billing_locations.count | number}}
+                  </h1>
+                </div>
+                <div class='floaty-number' ng-class='{appear: data.engaged_billing_locations.change, good: data.engaged_billing_locations.change > 0, bad: data.engaged_billing_locations.change < 0}'>
+                  <i class='zmdi zmdi-plus' ng-show='data.engaged_billing_locations.change > 0'></i>
+                  {{data.engaged_billing_locations.change | number}}
+                </div>
+              </div>
+            </div>
+            <div class='col-xs-6'>
+              <div class="card" style='margin:10px; height: 200px'>
+                <div class="card-header p-0">
+                </div>
+                <div class="card-block text-center">
+                  <h4>Content Discoveries</h4>
+                  <h1 class="card-title">
+                    {{data.cd_campaigns.present | number}}
+                  </h1>
+                  <h5> {{data.cd_campaigns.past | number}} Last Month </h5>
+                  <h4 ng-class='{green: data.cd_campaigns.percent_change > 0, red: data.cd_campaigns.percent_change < 0}'>
+                    <i class='zmdi zmdi-plus' ng-if='data.cd_campaigns.percent_change >= 0'></i>{{data.cd_campaigns.percent_change | number:2}}% Change
+                  </h4>
+                </div>
+                <div class='floaty-number' ng-class='{appear: data.cd_campaigns.change, good: data.cd_campaigns.change > 0, bad: data.cd_campaigns.change < 0}'>
+                  <i class='zmdi zmdi-plus' ng-show='data.cd_campaigns.change > 0'></i>
+                  {{data.cd_campaigns.change | number}}
+                </div>
+              </div>
+            </div>
+            <div class='col-xs-6'>
+              <div class="card" style='margin:10px; height: 200px'>
+                <div class="card-header p-0">
+                </div>
+                <div class="card-block text-center">
+                  <h4>Shares Made</h4>
+                  <div class='row'>
+                    <div class='col-xs-6'>
+                      <h5>Facebook</h5>
+                      <h1 class="card-title">
+                        {{data.shares.facebook.present | number}}
+                      </h1>
+                      <h5> {{data.shares.facebook.past | number}} Last Month </h5>
+                      <h4 ng-class='{green: data.shares.facebook.percent_change > 0, red: data.shares.facebook.percent_change < 0}'>
+                        <i class='zmdi zmdi-plus' ng-if='data.shares.facebook.percent_change >= 0'></i>{{data.shares.facebook.percent_change | number:2}}% Change
+                      </h4>
+                    </div>
+                    <div class='col-xs-6'>
+                      <h5>Twitter</h5>
+                      <h1 class="card-title">
+                        {{data.shares.twitter.present | number}}
+                      </h1>
+                      <h5> {{data.shares.twitter.past | number}} Last Month </h5>
+                      <h4 ng-class='{green: data.shares.twitter.percent_change > 0, red: data.shares.twitter.percent_change < 0}'>
+                        <i class='zmdi zmdi-plus' ng-if='data.shares.twitter.percent_change >= 0'></i>{{data.shares.twitter.percent_change | number:2}}% Change
+                      </h4>
+                    </div>
+                  </div>
+                </div>
+                <div class='floaty-number' ng-class='{appear: data.shares.change, good: data.shares.change > 0, bad: data.shares.change < 0}'>
+                  <i class='zmdi zmdi-plus' ng-show='data.shares.change > 0'></i>
+                  {{data.shares.change | number}}
+                </div>
               </div>
             </div>
           </div>
         </div>
-        
+        <div class='col-xs-4'>
+          <div class='card' style='height: 100%'>
+            <div class='card-body' style='width: 350px;height: 622px;'>
+              <div class='text-center'>
+                <h3>2017 Goal: <span class='green'>${{data.arr.year_target | number:2}}</span></h3>
+              </div>
+              <div class="progress progress-bar-vertical">
+                <div class="progress-bar progress-bar-striped active progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" ng-style="{height: (data.arr.earnedARR)/(data.arr.year_target - data.arr.starting)*100 + '%'}">
+                </div>
+                <div class='quarter q1'>__________________________________</div>
+                <div class='quarter q2'>__________________________________</div>
+                <div class='quarter q3'>__________________________________</div>
+                <div class='quarter q4'>__________________________________</div>
+              </div>
+              <div style='position: relative;height: 500px;top: 21px;'>
+                <div style='position: absolute; left: 40px;' ng-style="{bottom: (data.arr.earnedARR)/(data.arr.year_target - data.arr.starting)*100 + '%'}">${{data.arr.earnedARR + data.arr.starting  | number: 2}}</div>
+              </div>
+              <div class='quarter-values'>
+                <span class='q1'><i>Q4:</i> ${{data.arr.q4*12 | number: 2}} <i ng-if='metQuarterGoal(data.arr.q4*12, data.arr.starting, data.arr.earnedARR)' class="zmdi zmdi-check-circle green animated infinite pulse"></i>
+                <span ng-if='thisMonth >= 9'> <b>Current Quarter</b> </span>
+                </span>
+                <span class='q1-val'><i>Q3:</i> ${{data.arr.q3*12 | number: 2}} <i ng-if='metQuarterGoal(data.arr.q3*12, data.arr.starting, data.arr.earnedARR)' class="zmdi zmdi-check-circle green animated infinite pulse"></i>
+                <span ng-if='thisMonth >= 6 && thisMonth < 9'> <b>Current Quarter</b> </span>
+                </span>
+                <span class='q2-val'><i>Q2:</i> ${{data.arr.q2*12 | number: 2}} <i ng-if='metQuarterGoal(data.arr.q2*12, data.arr.starting, data.arr.earnedARR)' class="zmdi zmdi-check-circle green animated infinite pulse"></i>
+                <span ng-if='thisMonth >= 3 && thisMonth < 6'> <b>Current Quarter</b> </span>
+                </span>
+                <span class='q3-val'><i>Q1:</i> ${{data.arr.q1*12 | number: 2}} <i ng-if='metQuarterGoal(data.arr.q1*12, data.arr.starting, data.arr.earnedARR)' class="zmdi zmdi-check-circle green animated infinite pulse"></i>
+                <span ng-if='thisMonth >= 1 && thisMonth < 3'> <b>Current Quarter</b> </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
+      <!-- Bottom Row -->
+      <div class='row'>
+        <div class='col-xs-4'>
+          <div class="card" style='margin:10px; height: 200px'>
+            <div class="card-header p-0">
+            </div>
+            <div class="card-block text-center">
+              <h4>Brand Requests</h4>
+              <h1 class="card-title">
+                {{data.brand_requests.count | number}}
+              </h1>
+              <h5> {{data.brand_requests.unique | number}} Unique Brands (id) </h5>
+            </div>
+            <div class='floaty-number' ng-class='{appear: data.brand_requests.change, good: data.brand_requests.change > 0, bad: data.brand_requests.change < 0}'>
+              <i class='zmdi zmdi-plus' ng-show='data.brand_requests.change > 0'></i>
+              {{data.brand_requests.change | number}}
+            </div>
+          </div>
+        </div>
+        <div class='col-xs-4'>
+          <div class="card" style='margin:10px; height: 200px'>
+            <div class="card-header p-0">
+            </div>
+            <div class="card-block text-center">
+              <h4>Ad Runs</h4>
+              <h1 class="card-title">
+                {{data.ad_runs.total | number}}
+              </h1>
+              <div class='row'>
+                <div class='col-xs-6'>
+                  {{data.ad_runs.rf | number}} RF
+                </div>
+                <div class='col-xs-6'>
+                  {{data.ad_runs.bf | number}} BF
+                </div>
+              </div>
+            </div>
+            <div class='floaty-number' ng-class='{appear: data.ad_runs.change, good: data.ad_runs.change > 0, bad: data.ad_runs.change < 0}'>
+              <i class='zmdi zmdi-plus' ng-show='data.ad_runs.change > 0'></i>
+              {{data.ad_runs.change | number}}
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="bottom slider text-center" ng-class='{"in": data.celebration.on}'>
         <div style='position:absolute; top:37%; width: 100%'>
           <h1 style='font-size: 100px'>{{data.celebration.reason}}</h1>
           <h2>{{data.celebration.subreason}}</h2>
         </div>
-      </div> 
+      </div>
     </div>
+    <div class='pbxx-branding'></div>
   </body>
 </html>

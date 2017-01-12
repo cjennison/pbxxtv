@@ -1,0 +1,54 @@
+<div class='container'>
+  <div class='row' style='margin:20px'>
+    <div class='col-xs-6 col-xs-offset-3'>
+      <div class='card'>
+        <div class="card-header p-0">
+
+        </div>
+        <div class="card-block text-center">
+          	
+
+        <form>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Brand Slug</label>
+				    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" ng-model='data.brand_slug' placeholder="Enter your brand slug. (Not Name)">
+				    <small id="emailHelp" class="form-text text-muted">Enter in brand slug. Not Name.</small>
+				  </div>
+
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">ARR</label>
+				    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" ng-model='data.arr' placeholder="Enter in ARR as a number. (130,000)">
+				    <small id="emailHelp" class="form-text text-muted">What is the ARR now? (Don't include the $)</small>
+				  </div>
+
+				  <div style='border: 1px dotted black; padding: 5px'>
+				
+					  <div class="form-check">
+					    <label class="form-check-label">
+					      <input type="checkbox" ng-model='data.celebrate' class="form-check-input">
+					      Celebrate?
+					    </label>
+					  </div>
+
+					  <div class="form-group">
+					    <label for="exampleInputEmail1">Celebration Title</label>
+					    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" ng-model='data.celebration_title' placeholder="Celebrate, you fools!">
+					    <small id="emailHelp" class="form-text text-muted">Why are we celebrating?</small>
+					  </div>
+
+					  <div class="form-group">
+					    <label for="exampleInputEmail1">Celebration Subtitle</label>
+					    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" ng-model='data.celebration_subtitle' placeholder="Bring the ring to Mt. Doom">
+					    <small id="emailHelp" class="form-text text-muted">Care to elaborate?</small>
+					  </div>
+
+				  </div>
+				  
+				  <button type="submit" class="btn btn-primary" ng-click='submit()'>Submit</button>
+				</form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
