@@ -11,6 +11,14 @@ var pbxxTv = angular.module('pbxxTv', [
 				$scope.company = "Promoboxx";
 				$scope.max_retailers = null;
 
+				var dance_sound = new Howl({
+		      src: ['sounds/dance.wav', 'sound.wav']
+		    });
+
+		    var ding_sound = new Howl({
+		      src: ['sounds/ding.wav', 'sound.wav']
+		    });
+
 				$scope.data = {
 					celebration: {
 						on: false,
@@ -354,6 +362,14 @@ var pbxxTv = angular.module('pbxxTv', [
 								$scope.data.celebration.reason = data.title;
 								$scope.data.celebration.subreason = data.subtitle
 								toggleCelebration();
+
+								if (data.music.dance) {
+									dance_sound.play()
+								}
+
+								if (data.music.ding) {
+									ding_sound.play();
+								}
 							}
 
 							$timeout(function () {
@@ -397,7 +413,9 @@ var pbxxTv = angular.module('pbxxTv', [
 					arr: null,
 					celebrate: false,
 					celebration_title: null,
-					celebration_subtitle: null
+					celebration_subtitle: null,
+					dance_music: false,
+					ding_sound: false
 				}
 
 				$scope.submit = function () {

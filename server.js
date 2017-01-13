@@ -226,7 +226,7 @@ app.post('/brand', function (req, res) {
 			}
 
 			if (req.body.celebrate) {
-				celebrations.addCelebration(req.body.celebration_title, req.body.celebration_subtitle)
+				celebrations.addCelebration(req.body.celebration_title, req.body.celebration_subtitle, {dance: req.body.dance_music, ding: req.body.ding_sound})
 			}
 
 			arr.updateBrand(req.body, function () {
