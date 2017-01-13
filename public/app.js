@@ -380,6 +380,13 @@ var pbxxTv = angular.module('pbxxTv', [
 				init();
 			}
     })
+		.state('ben', {
+			url: '/ben',
+			templateUrl: 'ben.tmpl.html',
+			controller: function () {
+
+			}
+		})
 		.state('updater', {
 			url: '/update',
 			templateUrl: 'update-form.tmpl.html',
