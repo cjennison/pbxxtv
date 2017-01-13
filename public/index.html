@@ -45,9 +45,14 @@
       position: absolute;
       height: 100%
       }
-      .q3-val {
+      .q4-val {
       position: absolute;
-      top: 73%;
+      top: 0%;
+      width: 150px;
+      }
+      .q1-val {
+      position: absolute;
+      top: 75%;
       width: 150px;
       }
       .q2-val {
@@ -55,7 +60,7 @@
       top: 49%;
       width: 150px;
       }
-      .q1-val {
+      .q3-val {
       position: absolute;
       top: 24%;
       width: 150px;
@@ -134,6 +139,7 @@
       -o-transition: height 0.6s ease;
       transition: height 0.6s ease;
       }
+
     </style>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
@@ -142,6 +148,12 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.12/angular.min.js"></script><!-- load angular -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
     <script src='scripts/linechart.min.js'></script>
+<script type='text/javascript' src='bower_components/angular-charts/dist/angular-charts.min.js'></script>
+
+
+
+
+
     <script src="app.js"></script>
   </head>
   <body style='background-color: #15ACB7; overflow: hidden' ng-app='pbxxTv'>
@@ -296,7 +308,10 @@
               <div class="card-header p-0">
               </div>
               <div class="card-block text-center">
+
+
                 <h4>Ad Runs</h4>
+
                 <h1 class="card-title">
                   {{data.ad_runs.total | number}}
                 </h1>
@@ -308,7 +323,11 @@
                     {{data.ad_runs.bf | number}} BF
                   </div>
                 </div>
+
+                
               </div>
+
+
               <div class='floaty-number' ng-class='{appear: data.ad_runs.change, good: data.ad_runs.change > 0, bad: data.ad_runs.change < 0}'>
                 <i class='zmdi zmdi-plus' ng-show='data.ad_runs.change > 0'></i>
                 {{data.ad_runs.change | number}}
@@ -324,31 +343,42 @@
               <h3>2017 Goal: <span class='green'>${{data.arr.year_target | number:2}}</span></h3>
             </div>
             <div class="progress progress-bar-vertical">
-              <div class="progress-bar progress-bar-striped active progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" ng-style="{height: (data.arr.earnedARR)/(data.arr.year_target - data.arr.starting)*100 + '%'}">
+              <div class="progress-bar progress-bar-striped active progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" ng-style="{height: (data.arr.earnedARR + data.arr.starting)/(data.arr.year_target)*100 + '%'}">
               </div>
-              <div class='quarter q1'>__________________________________</div>
-              <div class='quarter q2'>__________________________________</div>
-              <div class='quarter q3'>__________________________________</div>
-              <div class='quarter q4'>__________________________________</div>
+              <div class='quarter q1' ng-style='{height: getGoalHeight(data.arr.q1*12, data.arr.year_target)}'>__________________________________</div>
+              <div class='quarter q2' ng-style='{height: getGoalHeight(data.arr.q2*12, data.arr.year_target)}'>__________________________________</div>
+              <div class='quarter q3' ng-style='{height: getGoalHeight(data.arr.q3*12, data.arr.year_target)}'>__________________________________</div>
+              <div class='quarter q4' ng-style='{height: getGoalHeight(data.arr.q4*12, data.arr.year_target)}'>__________________________________</div>
             </div>
             <div style='position: relative;height: 500px;top: 21px;'>
-              <div style='position: absolute; left: 40px;' ng-style="{bottom: (data.arr.earnedARR)/(data.arr.year_target - data.arr.starting)*100 + '%'}">${{data.arr.earnedARR + data.arr.starting  | number: 2}}</div>
+              <div style='position: absolute; left: 40px;' ng-style="{bottom: (data.arr.earnedARR + data.arr.starting)/(data.arr.year_target)*100 + '%'}">${{data.arr.earnedARR + data.arr.starting  | number: 2}}</div>
             </div>
             <div class='quarter-values'>
-            <h5>
-              <span class='q1'><i>Q4:</i> ${{data.arr.q4*12 | number: 2}} <i ng-if='metQuarterGoal(data.arr.q4*12, data.arr.starting, data.arr.earnedARR)' class="zmdi zmdi-check-circle green animated infinite pulse"></i>
-              <span ng-if='thisMonth >= 9'> <b>Current Quarter</b> </span>
-              </span>
-              <span class='q1-val'><i>Q3:</i> ${{data.arr.q3*12 | number: 2}} <i ng-if='metQuarterGoal(data.arr.q3*12, data.arr.starting, data.arr.earnedARR)' class="zmdi zmdi-check-circle green animated infinite pulse"></i>
-              <span ng-if='thisMonth >= 6 && thisMonth < 9'> <b>Current Quarter</b> </span>
-              </span>
-              <span class='q2-val'><i>Q2:</i> ${{data.arr.q2*12 | number: 2}} <i ng-if='metQuarterGoal(data.arr.q2*12, data.arr.starting, data.arr.earnedARR)' class="zmdi zmdi-check-circle green animated infinite pulse"></i>
-              <span ng-if='thisMonth >= 3 && thisMonth < 6'> <b>Current Quarter</b> </span>
-              </span>
-              <span class='q3-val'><i>Q1:</i> ${{data.arr.q1*12 | number: 2}} <i ng-if='metQuarterGoal(data.arr.q1*12, data.arr.starting, data.arr.earnedARR)' class="zmdi zmdi-check-circle green animated infinite pulse"></i>
-              <span ng-if='thisMonth >= 1 && thisMonth < 3'> <b>Current Quarter</b> </span>
-              </span>
-              </h5>
+              <h5>
+                <span class='q4-val'
+
+                ng-style='{top: (0)+ "%"}'><i>Q4:</i> ${{data.arr.q4*12 | number: 2}} <i ng-if='metQuarterGoal(data.arr.q4*12, data.arr.starting, data.arr.earnedARR)' class="zmdi zmdi-check-circle green animated infinite pulse"></i>
+                <span ng-if='thisMonth >= 9'> <b>Current Quarter</b> </span>
+                </span>
+                <span class='q3-val'
+                ng-style='{top: (getGoalHeightInverse(data.arr.q3*12, data.arr.year_target)-45)+ "%"}'
+                ><i>Q3:</i> ${{data.arr.q3*12 | number: 2}} <i ng-if='metQuarterGoal(data.arr.q3*12, data.arr.starting, data.arr.earnedARR)' class="zmdi zmdi-check-circle green animated infinite pulse"></i>
+                <span ng-if='thisMonth >= 6 && thisMonth < 9'> <b>Current Quarter</b> </span>
+                </span>
+                <span class='q2-val'
+                ng-style='{top: (getGoalHeightInverse(data.arr.q2*12, data.arr.year_target)-20)+ "%"}'
+                ><i>Q2:</i> ${{data.arr.q2*12 | number: 2}} <i ng-if='metQuarterGoal(data.arr.q2*12, data.arr.starting, data.arr.earnedARR)' class="zmdi zmdi-check-circle green animated infinite pulse"></i>
+                <span ng-if='thisMonth >= 3 && thisMonth < 6'> <b>Current Quarter</b> </span>
+                </span>
+                <span class='q1-val' 
+
+
+                ng-style='{top: getGoalHeightInverse(data.arr.q1*12, data.arr.year_target) + "%"}'
+
+                 ><i>Q1:</i> ${{data.arr.q1*12 | number: 2}} <i ng-if='metQuarterGoal(data.arr.q1*12, data.arr.starting, data.arr.earnedARR)' class="zmdi zmdi-check-circle green animated infinite pulse"></i>
+                <span ng-if='thisMonth >= 1 && thisMonth < 3'> <b>Current Quarter</b> </span>
+                </span>
+                </h5>
             </div>
           </div>
         </div>
@@ -378,7 +408,7 @@
           <div class="card-header p-0">
           </div>
           <div class="card-block text-center">
-            <h4>Engaged Retailers (No Rollback)</h4>
+            <h4>Engaged Retailers (All Time)</h4>
             <div style='height:205px'>
               <linechart data="data.engaged_retailers" options="data.engaged_retailers.options"></linechart>
             </div>

@@ -1,6 +1,7 @@
 var pbxxTv = angular.module('pbxxTv', [
 	'ui.router',
-	'n3-line-chart'
+	'n3-line-chart',
+	'angularCharts'
 		//ng-deps
 ])
 .config(['$stateProvider', function($stateProvider) {
@@ -137,6 +138,21 @@ var pbxxTv = angular.module('pbxxTv', [
 						change: 0
 					},
 					ad_runs: {
+						data: [{
+							x: "Ad Run Types",
+							y: [25, 15]
+						}],
+						series: ["Retailer Funded", "Brand Funded"],
+						config: {
+							labels: true,
+							legend: {
+								display: true,
+								position: 'right'
+							},
+							innerRadius: 0,
+							height: 100,
+							width: 100
+						},
 						total: 0,
 						rf: 0,
 						bf: 0,
@@ -155,8 +171,16 @@ var pbxxTv = angular.module('pbxxTv', [
 					}
 				}
 
+				$scope.getGoalHeight = function (current, goal) {
+					return current/goal*100 + '%';
+				}
+
+				$scope.getGoalHeightInverse = function (current, goal) {
+					return ((current/goal*100)-25);
+				}
+
 				$scope.metQuarterGoal = function (goal, base, earned) {
-					return Math.abs(goal - base) <= earned
+					return goal <= (earned + base)
 				}
 
 				function toggleChange (key, change) {
