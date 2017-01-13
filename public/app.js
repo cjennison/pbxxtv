@@ -1,5 +1,6 @@
 var pbxxTv = angular.module('pbxxTv', [
-	'ui.router'
+	'ui.router',
+	'n3-line-chart'
 		//ng-deps
 ])
 .config(['$stateProvider', function($stateProvider) {
@@ -7,6 +8,8 @@ var pbxxTv = angular.module('pbxxTv', [
       url: '/',
       controller: function ($scope, $http, $timeout) {
 				$scope.company = "Promoboxx";
+				$scope.max_retailers = null;
+
 				$scope.data = {
 					celebration: {
 						on: false,
@@ -18,6 +21,37 @@ var pbxxTv = angular.module('pbxxTv', [
 						eligibleCount: 0,
 						change: 0
 					},
+					engaged_retailers: {
+						data_new: [],
+						options: {
+							drawLegend: false,
+							series: [
+				        {
+				          axis: "y",
+				          dataset: "data_new",
+				          key: "count",
+				          label: "Engaged Retailers Historic",
+				          color: "#1f77b4",
+				          type: ['line', 'area'],
+				          id: 'All time'
+				        }
+				      ],
+				      axes: {
+				      	x: {
+				      		key: "x",
+				      		type: "date",
+				      		padding: {min:3, max:6},
+				      		tickFormat: function (value, index) {
+				      			return moment(value).format('YY-MM');
+				      		}
+				      	},
+				      	y: {
+				      		min: 0
+				      	}
+
+				      }
+						},
+					},
 					brands: {
 						active: 0,
 						unlocked: 0,
@@ -26,6 +60,50 @@ var pbxxTv = angular.module('pbxxTv', [
 					brand_campaigns: {
 						present: 0,
 						past: 0,
+						options: {
+							drawLegend: false,
+							series: [
+				        {
+				          axis: "y",
+				          dataset: "data_old",
+				          key: "campaigns_launched",
+				          label: "Last Year",
+				          color: "#1f77b4",
+				          type: ['line'],
+				          id: 'Last Year'
+				        },
+				        {
+				          axis: "y",
+				          dataset: "data_new",
+				          key: "campaigns_launched",
+				          label: "This Year",
+				          color: "#4caf50",
+				          type: ['column'],
+				          id: 'This Year'
+				        }
+				      ],
+				      axes: {
+				      	x: {
+				      		key: "month",
+				      		min: 0,
+				      		max: 12,
+				      		padding: {min:3, max:6},
+				      		tickFormat: function (value, index) {
+				      			if (value == 0) {
+				      				return "";
+				      			}
+				      			return moment().month(value-1).format('MMM');
+				      		}
+				      	},
+				      	y: {
+				      		min: 0,
+				      		max: $scope.max_retailers
+				      	}
+
+				      }
+						},
+						data_old: [],
+						data_new: [],
 						change: 0,
 						percent_change: 0
 					},
@@ -135,11 +213,12 @@ var pbxxTv = angular.module('pbxxTv', [
 
 						$scope.data.brand_campaigns.percent_change = getPercentDiff(past.campaigns_launched, present.campaigns_launched)
 
-						$scope.data.brand_campaigns.data = _.filter(data, function (d) {
-							if (d.year == presentYear) {
-								return d.month <= presentMonth;
-							}
-							return d.year == pastYear
+						$scope.data.brand_campaigns.data_old = _.filter(data, function (d) {
+							return d.year == pastYear;
+						});
+
+						$scope.data.brand_campaigns.data_new = _.filter(data, function (d) {
+							return d.year == presentYear && d.month <= presentMonth;
 						});
 					})
 
@@ -168,14 +247,6 @@ var pbxxTv = angular.module('pbxxTv', [
 						$scope.data.brands.unlocked = unlocked.brand_count;
 					})
 
-					$http.get('/monthly_engaged_locations')
-					.success(function (data) {
-						var present = data[data.length-1];
-						var past = data[data.length-2]
-						toggleChange('engaged_locations', (present.num_retailers_engaged - $scope.data.engaged_locations.present.num_retailers_engaged))
-						$scope.data.engaged_locations.present = present;
-						$scope.data.engaged_locations.past = past;
-					})
 
 					$http.get('/brand_requests')
 					.success(function (data) {
@@ -190,10 +261,14 @@ var pbxxTv = angular.module('pbxxTv', [
 						$scope.data.engaged_billing_locations.count = data.count;
 					})
 
-					$http.get('/arr')
+					
+
+					$http.get('/engaged_retailers')
 					.success(function (data) {
-						console.log(data)
-						$scope.data.arr = data;
+						data.forEach(function (row) {
+							row.x = new Date(row.date);
+						});
+						$scope.data.engaged_retailers.data_new = data;
 					})
 
 					$http.get('/ad_runs')
@@ -209,14 +284,7 @@ var pbxxTv = angular.module('pbxxTv', [
 
 					})
 
-					$http.get('/celebration_reasons')
-					.success(function (data) {
-						if (data) {
-							$scope.data.celebration.reason = data.title;
-							$scope.data.celebration.subreason = data.subtitle
-							toggleCelebration();
-						}
-					})
+					
 
 					$http.get('/shares')
 					.success(function (data) {
@@ -249,10 +317,35 @@ var pbxxTv = angular.module('pbxxTv', [
 					}, 60000)
 				}
 
+				function checkCelebrations () {
+
+					$http.get('/arr')
+					.success(function (data) {
+						$scope.data.arr = data;
+					})
+
+						$http.get('/celebration_reasons')
+						.success(function (data) {
+							if (data) {
+								$scope.data.celebration.reason = data.title;
+								$scope.data.celebration.subreason = data.subtitle
+								toggleCelebration();
+							}
+
+							$timeout(function () {
+								checkCelebrations();
+							}, 5000)
+
+						})
+
+
+				}
+
 
 				function init () {
 					$timeout(function () {
 						pingServer();
+						checkCelebrations();
 					})
 
 					$scope.date = moment().format();

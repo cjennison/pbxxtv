@@ -16,7 +16,7 @@ var sequelize = new Sequelize(db_config.db);
 
 var celebrations = require('./lib/CelebrationService');
 var arr = require('./lib/ARRService');
-
+var _ = require('lodash')
 
 app.use(express.static(__dirname + '/public'));                 // set the static files location /public/img will be /img for users
 app.use(morgan('dev'));                                         // log every request to the console
@@ -136,6 +136,77 @@ app.get('/engaged_locations', function (req, res) {
 	})
 })
 
+app.get('/engaged_retailers', function (req, res) {
+	sequelize.query("SELECT events.earliest_event " +
+					"FROM " +
+					"  ( " +
+					"SELECT events.retailer_id AS retailer_id, " +
+					"       MIN(events.created_at) as earliest_event " +
+					"      FROM events " +
+					"      WHERE ((event_type = 'campaign' " +
+					"              AND category = 'share' " +
+					"              AND events.subcategory IN ('facebook', " +
+					"                                         'twitter', " +
+					"                                         'email', " +
+					"                                         'instagram', " +
+					"                                         'mobile_ad')) " +
+					"             OR (event_type = 'campaign' " +
+					"                 AND category = 'install' " +
+					"                 AND events.subcategory = 'widget') " +
+					"             OR (event_type = 'campaign' " +
+					"                 AND category = 'download' " +
+					"                 AND events.subcategory = 'asset')) " +
+					"        AND deleted_at IS NULL " +
+					"GROUP BY retailer_id ) AS events " +
+					"JOIN retailers ON retailers.id = events.retailer_id AND retailers.deleted_at IS NULL", { type: sequelize.QueryTypes.SELECT})
+	.then(function (data) {
+
+		var dateCount = 24;
+		var startDate = moment('2016-01-01');
+		var dates = [];
+		for(var i = 0; i<dateCount;i++) {
+			var dat = moment('2016-01-01').add(i, 'months');
+			var timeNow = moment().add(1, 'day');
+
+			if (dat < timeNow) {
+				dates.push(dat);
+			}
+		}
+
+		var obj = [];
+
+		_.each(dates, function (date) {
+			var sum = 0;
+
+			_.each(data, function (engaged_retailer) {
+				if (date.isAfter(engaged_retailer.earliest_event)) {
+					sum++;
+				}
+			})
+
+			obj.push({
+				date: new Date(date.format("YYYY-MM-DD")),
+				count: sum
+			})
+		})
+			var timeNow = moment()
+			var sum = 0;
+		_.each(data, function (engaged_retailer) {
+
+			if (timeNow.isAfter(engaged_retailer.earliest_event)) {
+				sum++;
+			}
+		})
+		obj.push({
+				date: new Date(timeNow.format("YYYY-MM-DD")),
+				count: sum
+			})
+
+		res.json(obj);
+
+	})
+})
+
 app.get('/arr', function (req, res) {
 	arr.getARRSummary(function (summary) {
 		res.json(summary)
@@ -175,6 +246,8 @@ app.get('*', function (req, res) {
 
 
 var timeNow = moment().subtract(moment().date()-1, 'days').format('YYYY-MM-DD');
+
+
 
 app.listen(port);
 console.log("App listening on port ", port);
