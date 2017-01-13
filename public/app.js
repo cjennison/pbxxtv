@@ -120,17 +120,27 @@ var pbxxTv = angular.module('pbxxTv', [
 					$http.get('/brand_campaigns')
 					.success(function (data) {
 
-						var concat_date = moment().format('YYYY-MM')
-						var prev_date = moment().subtract(1, 'month').format('YYYY-MM')
+						var presentYear = moment().year();
+						var presentMonth = moment().month()+1;
 
-						var present = _.find(data, function (row) { return row['date'] == concat_date})
-						var past = _.find(data, function (row) { return row['date'] == prev_date})
+						var pastYear = moment().subtract('1', 'month').year();
+						var pastMonth = moment().subtract('1', 'month').month()+1;
+
+						var present = _.find(data, function (row) { return row['year'] == presentYear && row['month'] == presentMonth})
+						var past = _.find(data, function (row) { return row['year'] == pastYear && row['month'] == pastMonth})
 						toggleChange('brand_campaigns', (present.campaigns_launched - $scope.data.brand_campaigns.present))
 
 						$scope.data.brand_campaigns.present = present.campaigns_launched;
 						$scope.data.brand_campaigns.past = past.campaigns_launched;
 
 						$scope.data.brand_campaigns.percent_change = getPercentDiff(past.campaigns_launched, present.campaigns_launched)
+
+						$scope.data.brand_campaigns.data = _.filter(data, function (d) {
+							if (d.year == presentYear) {
+								return d.month <= presentMonth;
+							}
+							return d.year == pastYear
+						});
 					})
 
 					$http.get('/cd_campaigns')

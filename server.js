@@ -48,12 +48,14 @@ app.get('/brands', function (req, res) {
 })
 
 app.get('/brand_campaigns', function (req, res) {
-	sequelize.query("SELECT DATE_FORMAT(start_date, '%Y-%m') AS date, COUNT(*) as campaigns_launched " +
+	sequelize.query("SELECT EXTRACT(YEAR FROM start_date) as year, EXTRACT(MONTH FROM start_date) as month, COUNT(*) as campaigns_launched " +
 									"FROM campaigns " +
 									"WHERE deleted_at IS NULL " +
 									"  AND campaign_type <> 'retailer_discovered' " +
-									"GROUP BY DATE_FORMAT(start_date, '%M-%Y') " +
-									"ORDER BY DATE_FORMAT(start_date, '%Y-%m') DESC", { type: sequelize.QueryTypes.SELECT})
+									"  AND start_date IS NOT NULL " +
+									"  AND DATE_FORMAT(start_date, '%Y-%M') <= DATE_FORMAT(CURDATE(), '%Y-%M') " +
+									"GROUP BY EXTRACT(YEAR FROM start_date), EXTRACT(MONTH FROM start_date) " +
+									"ORDER BY year DESC", { type: sequelize.QueryTypes.SELECT})
 	.then(function (results) {
 		res.json(results)
 	})
